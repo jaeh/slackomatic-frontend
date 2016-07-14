@@ -11,7 +11,7 @@ apt-get install -y nodejs
 
 # app setup as user vagrant
 su - vagrant -c "cd /vagrant && ./cli.sh install"
-su - vagrant -c "cd /vagrant && ./cli.sh install"
+# su - vagrant -c "cd /vagrant && ./cli.sh build"
 #
 # cd /vagrant
 # ./cli.sh install
