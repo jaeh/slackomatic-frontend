@@ -104,7 +104,7 @@ function build() {
     --out ${DIST_DIR} \
   ;
 
-  echo "html-inline the source"
+  echo "html-inline the source (NOT WORKING - CSS IS MISSING)"
   node_modules/.bin/html-inline \
     -i ${DIST_DIR}home.html \
     -o ${DIST_DIR}index.html \

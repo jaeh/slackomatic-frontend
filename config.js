@@ -6,39 +6,35 @@ module.exports = {
   , port: 8082
   }
 , pages: [
-    '/', 
-    '/index.html', 
-    '/advanced', 
-    '/troubleshooting', 
+    '/',
+    '/index.html',
+    '/advanced',
+    '/troubleshooting',
     '/timetable'
   ]
 , files:{
       '/': {
-        mime: 'text/html'
-      , name: 'index.html'
-    }
-    , '/slackomatic.appcache': {
-        mime: 'text/plain'
-      , name: 'slackomatic.appcache'
-    }
-    , '/favicon.ico': {
-        mime: 'image/x-icon'
-      , name: 'favicon.ico'
-    }
-    , '/img/cleanup_reminder.jpg': {
-        mime: 'image/jpg'
-      , name: 'img/cleanup_reminder.jpg'
-    }
-    , '/img/power_down_warning.png': {
-        mime: 'image/png'
-      , name: 'img/power_down_warning.png'
+        mime: 'text/html',
+        name: 'index.html'
+    },
+    '/favicon.ico': {
+        mime: 'image/x-icon',
+        name: 'favicon.ico'
+    },
+    '/img/cleanup_reminder.jpg': {
+        mime: 'image/jpg',
+        name: 'img/cleanup_reminder.jpg'
+    },
+    '/img/power_down_warning.png': {
+        mime: 'image/png',
+        name: 'img/power_down_warning.png'
     }
   }
   , supportedLines: {
-      '2':  {type: 'tram', color: '#e35885'}
-    , 'D':  {type: 'tram',  color: '#e35885'}
-    ,  '13A':{type: 'bus',  color: '#5caed7'}
-    , 'U2': {type: 'sub',  color: '#8a5a83'}
-    , 'U3': {type: 'sub',  color: '#f76205'}
+      '2':  {type: 'tram', color: '#e35885'},
+      'D':  {type: 'tram',  color: '#e35885'},
+      '13A':{type: 'bus',  color: '#5caed7'},
+      'U2': {type: 'sub',  color: '#8a5a83'},
+      'U3': {type: 'sub',  color: '#f76205'}
   }
 };
