@@ -14,22 +14,33 @@ Install these on your dev machine:
 1. [VirtualBox](https://www.virtualbox.org/wiki/Downloads)
 2. [Vagrant](http://sourabhbajaj.com/mac-setup/Vagrant/README.html)
 
-Run the app in a virtual machine with `vagrant up`.
+On Windows you may need to install the `vagrant-vbguest` plugin to be able
+to mount the project folder to `/vagrant`: `vagrant plugin install vagrant-vbguest`
 
-The current project directory is mapped into the VM as `/vagrant`.
+
+## Setting up the development VM
+
+Run the app in a virtual machine with Vagrant: `vagrant up`. The
+current project directory is mapped into the VM as `/vagrant`.
 
 You can log into the VM wih `vagrant ssh`.
 
     $ vagrant ssh
     vagrant$ cd /vagrant
+
+    # Build the final HTML
     vagrant$ ./cli.sh build
-    vagrant$ npm start
-    # or
-    vagrant$ node dist/server.js 1337
+
+    # Run the webserver
+    vagrant$ node dist/server.js 1337  
+    # or ./cli.sh build
+
+Then visit http://10.0.0.10:1337
 
 
+## On the server
 
-Then visit http://10.10.10.10:1337
+Code is installed in `/server/slackomatic-frontend`. Update the code with `./cli.sh upload`.
 
 
 # Old Setup

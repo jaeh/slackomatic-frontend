@@ -9,6 +9,7 @@ SRC_DIR=src/
 APPCACHE_FILE=slackomatic.appcache
 CONFIG_FILE=config.js
 TMP_DIR=.tmp/
+SERVER_DIR=/server/slackomatic-frontend
 
 function clean() {
   echo 'clean dist/'
@@ -67,14 +68,11 @@ function build() {
   echo "copy static files to dist"
   cp -rf \
     ${SRC_DIR}img/ \
-    ${SRC_DIR}${APPCACHE_FILE} \
     ${CONFIG_FILE} \
     ${SRC_DIR}favicon.ico \
-    ${SRC_DIR}install-node-raspbian.sh \
     ${SRC_DIR}run.sh \
     ${DIST_DIR} \
   ;
-  chmod +x ${SRC_DIR}install-node-raspbian.sh
   chmod +x ${SRC_DIR}run.sh
 
   echo "compile client side js"
@@ -104,33 +102,41 @@ function build() {
     --out ${DIST_DIR} \
   ;
 
-  echo "html-inline the source (NOT WORKING - CSS IS MISSING)"
-  node_modules/.bin/html-inline \
-    -i ${DIST_DIR}home.html \
-    -o ${DIST_DIR}index.html \
-    -b ${DIST_DIR} \
-  ;
+  # echo "html-inline the source (NOT WORKING - CSS IS MISSING)"
+  # node_modules/.bin/html-inline \
+  #   -i ${DIST_DIR}home.html \
+  #   -o ${DIST_DIR}index.html \
+  #   -b ${DIST_DIR} \
+  # ;
 
-  echo 'babelify the server.js'
-  node_modules/.bin/babel \
-    server.js \
-    --out-file dist/server.js \
-  ;
+  mv ${DIST_DIR}/home.html ${DIST_DIR}/index.html
+  cp server.js ${DIST_DIR}/
+
+  mkdir ${DIST_DIR}/node_modules
+  cp -r node_modules/mime ${DIST_DIR}/node_modules
+
+  # echo 'babelify the server.js'
+  # node_modules/.bin/babel \
+  #   server.js \
+  #   --out-file dist/server.js \
+  # ;
 }
 
 function upload() {
   echo 'create dist directory and prebuild app there'
   build;
 
-  echo 'remove all files from the source directory'
-  ssh pi@10.20.30.90 'rm -rf /home/pi/nodejs/* -r'
+  # echo 'remove all files from the source directory'
+  # ssh pi@10.20.30.90 'rm -rf /home/pi/nodejs/* -r'
+  # ssh pi@10.20.30.90 'rm -rf /server/screeninvader/*'
 
   echo 'copy the prebuilt dist directory to the production root'
-  scp -r ./dist/* pi@10.20.30.90:/home/pi/nodejs/
+  # scp -r ./dist/* pi@10.20.30.90:/home/pi/nodejs/
+  rsync -rzvh dist/* pi@10.20.30.90:${SERVER_DIR}/
 
-  echo 'call killkillkill to kill the app and force respawn by inittab'
-  curl http://10.20.30.90/killkillkill
-  echo ''
+  # echo 'call killkillkill to kill the app and force respawn by inittab'
+  # curl http://10.20.30.90/killkillkill
+  echo 'all done'
  }
 
 function run() {
@@ -139,7 +145,7 @@ function run() {
   #   src/js/main.js -t babelify -o dist/js/bundle.js \
   #   -- 1> ./watchify.log 2> ./watchify.log &
 
-  echo 'starting app with nodemon on port 1337'
+  # echo 'starting app with nodemon on port 1337'
   node_modules/.bin/nodemon dist/server.js 1337
 }
 
