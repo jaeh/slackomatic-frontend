@@ -16,14 +16,15 @@ function clean() {
   mkdir -p dist/js
 }
 
+# install installs dev npm modules, fonts, icons, and sets up the dist/ directory
 function install() {
   mkdir -p dist/
 
   echo 'installing npm dependencies'
-  npm install
+  npm install --dev
 
   echo 'install a google webfont for local use and serving'
-  webfont-dl \
+  node_modules/.bin/webfont-dl \
     https://fonts.googleapis.com/css?family=Ubuntu+Mono:400 \
     --font-out=src/font \
     --out src/css/include/font.styl \
@@ -35,7 +36,7 @@ function install() {
 
   echo 'installing fontello icons'
   mkdir -p ${TMP_DIR}
-  fontello-cli install \
+  node_modules/.bin/fontello-cli install \
   --css ${TMP_DIR} \
   --font ${TMP_DIR} \
   --config ${SRC_DIR}fontello.json \
@@ -76,13 +77,8 @@ function build() {
   chmod +x ${SRC_DIR}install-node-raspbian.sh
   chmod +x ${SRC_DIR}run.sh
 
-  echo "sed ${APPCACHE_FILE} with current timestamp for cache reload"
-  CUR_DATE=$(date --utc --rfc-3339=seconds)
-  echo $CUR_DATE
-  sed -i -e "s/|date|/$CUR_DATE/g" ${DIST_DIR}${APPCACHE_FILE}
-
   echo "compile client side js"
-  browserify \
+  node_modules/.bin/browserify \
     ${SRC_DIR}js/index.js \
     --outfile ${DIST_DIR}js/slackomatic.js \
     -t babelify \
@@ -96,27 +92,27 @@ function build() {
   #~ ;
 
   echo "compile css files"
-  stylus \
+  node_modules/.bin/stylus \
     ${SRC_DIR}css/slackomatic.styl \
     --out ${DIST_DIR}css/slackomatic.css \
     --import node_modules/nib \
   ;
 
   echo "compile html files"
-  jade \
+  node_modules/.bin/jade \
     ${SRC_DIR}html/home.jade \
     --out ${DIST_DIR} \
   ;
 
   echo "html-inline the source"
-  html-inline \
+  node_modules/.bin/html-inline \
     -i ${DIST_DIR}home.html \
     -o ${DIST_DIR}index.html \
     -b ${DIST_DIR} \
   ;
-  
+
   echo 'babelify the server.js'
-  babel \
+  node_modules/.bin/babel \
     server.js \
     --out-file dist/server.js \
   ;
@@ -135,18 +131,16 @@ function upload() {
   echo 'call killkillkill to kill the app and force respawn by inittab'
   curl http://10.20.30.90/killkillkill
   echo ''
-}
+ }
 
 function run() {
-  echo 'start watchify and push it to background'
-  watchify \
-    src/js/main.js -t babelify -o dist/js/bundle.js \
-    -- 1> ./watchify.log 2> ./watchify.log &
+  # echo 'start watchify and push it to background'
+  # node_modules/.bin/watchify \
+  #   src/js/main.js -t babelify -o dist/js/bundle.js \
+  #   -- 1> ./watchify.log 2> ./watchify.log &
 
-  echo 'starting nodemon'
-  nodemon \
-    dist/server.js 1337 \
-  ;
+  echo 'starting app with nodemon on port 1337'
+  node_modules/.bin/nodemon dist/server.js 1337
 }
 
 if [ $1 ]
