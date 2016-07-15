@@ -14,8 +14,12 @@ Install these on your dev machine:
 1. [VirtualBox](https://www.virtualbox.org/wiki/Downloads)
 2. [Vagrant](http://sourabhbajaj.com/mac-setup/Vagrant/README.html)
 
-On Windows you may need to install the `vagrant-vbguest` plugin to be able
+### On Windows
+
+Install the `vagrant-vbguest` plugin to be able
 to mount the project folder to `/vagrant`: `vagrant plugin install vagrant-vbguest`
+
+Also set `git config --global core.autocrlf false`
 
 
 ## Setting up the development VM
@@ -27,6 +31,9 @@ You can log into the VM wih `vagrant ssh`.
 
     $ vagrant ssh
     vagrant$ cd /vagrant
+
+    # Install the dependencies
+    vagrant$ ./cli.sh build
 
     # Build the final HTML
     vagrant$ ./cli.sh build

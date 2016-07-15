@@ -1,6 +1,6 @@
 #!/usr/bin/env node
-var config = require("./config.js");
-const port = process.argv[2] || config.port || 1337
+// var config = require("./``.js");
+const port = process.argv[2] || 1337
 
 var http = require("http"),
     url = require("url"),

@@ -27,6 +27,7 @@ Vagrant.configure("2") do |config|
 
     vm.customize ["modifyvm", :id, "--memory", mem]
     vm.customize ["modifyvm", :id, "--cpus", cpus]
+    vm.customize ["setextradata", :id, "VBoxInternal2/SharedFoldersEnableSymlinksCreate/v-root", "1"]
   end
 
   # Use Vagrant's default insecure key (~/.vagrant.d/insecure_private_key)

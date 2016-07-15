@@ -22,7 +22,7 @@ function install() {
   mkdir -p dist/
 
   echo 'installing npm dependencies'
-  npm install --dev
+  npm install
 
   echo 'install a google webfont for local use and serving'
   node_modules/.bin/webfont-dl \
