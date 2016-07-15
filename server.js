@@ -1,45 +1,41 @@
 #!/usr/bin/env node
+// var config = require("./``.js");
+const port = process.argv[2] || 1337
 
-import {createServer} from 'http';
-import {join} from 'path';
-import {readFileSync as read} from 'fs';
-import config from './config.js';
+var http = require("http"),
+    url = require("url"),
+    path = require("path"),
+    fs = require("fs"),
+    mime = require("mime");
 
-const port = process.argv[2] || config.port || 1337
-const pages = config.pages || {'/': {mime: 'text/html', name:'index.html'}};
-const files = {};
+http.createServer(function(request, response) {
 
-Object.keys(config.files).forEach(key => {
-  const file = config.files[key];
-  files[key] = {
-    mime: file.mime,
-    data: read(join(__dirname, file.name)),
-  };
-});
+  var uri = url.parse(request.url).pathname
+    , filename = path.join(process.cwd(), uri);
 
-const server = createServer((req, res) => {
-  let file = files[req.url];
+  fs.exists(filename, function(exists) {
+    if(!exists) {
+      response.writeHead(404, {"Content-Type": "text/plain"});
+      response.write("404 Not Found\n");
+      response.end();
+      return;
+    }
 
-  if (req.url === '/killkillkill') {
-    res.end('killed');
-    return process.exit();
-  }
+	if (fs.statSync(filename).isDirectory()) filename += '/index.html';
 
-  if (pages.indexOf(req.url) > -1 && ! file) {
-    file = files['/'];
-  }
+    fs.readFile(filename, "binary", function(err, file) {
+      if(err) {
+        response.writeHead(500, {"Content-Type": "text/plain"});
+        response.write(err + "\n");
+        response.end();
+        return;
+      }
 
-  if (file && file.data && file.mime) {
-    res.writeHead(200, {'Content-Type': file.mime});
-    res.end(file.data);
-  } else {
-    res.writeHead(301, {
-      Location: '/'
+      response.writeHead(200, {"Content-Type": mime.lookup(filename)});
+      response.write(file, "binary");
+      response.end();
     });
-    res.end(); 
-  }
-});
+  });
+}).listen(parseInt(port, 10));
 
-server.listen(port);
-
-console.log(`Servomatic listening to port ${port}`);
+console.log("Static file server running at\n  => http://localhost:" + port + "/\nCTRL + C to shutdown");

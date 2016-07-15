@@ -7,3 +7,4 @@ src/css/include/icons.styl
 src/font
 watchify.log
 .tmp
+.vagrant

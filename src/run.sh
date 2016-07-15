@@ -1,3 +1,3 @@
 #!/bin/bash
 #this file starts the servomatic-frontend server
-sudo node /home/pi/nodejs/server.js 80
+sudo node /server/slackomatic-frontend/server.js 80
